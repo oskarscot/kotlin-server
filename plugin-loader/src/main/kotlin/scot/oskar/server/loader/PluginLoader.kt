@@ -4,6 +4,7 @@ import org.bukkit.plugin.java.JavaPlugin
 import revxrsal.commands.bukkit.BukkitCommandHandler
 import scot.oskar.server.api.KPlugin
 import scot.oskar.server.api.PluginInfo
+import scot.oskar.server.loader.command.KPluginsCommand
 import java.io.File
 import java.net.URLClassLoader
 import java.util.jar.JarFile
@@ -35,14 +36,17 @@ class PluginLoader: JavaPlugin() {
 
                 val className = entry.name.substring(0, entry.name.length - 6).replace('/', '.')
 
-                if(className == "revxrsal.commands.bukkit.brigadier.ReflectionCommodore"){ // temporary fix for a bug in Lamp
-                    continue;
-                }
-
                 val classLoader = URLClassLoader(arrayOf(pluginFile.toURI().toURL()), javaClass.classLoader)
 
                 try {
-                    val pluginClass = Class.forName(className, true, classLoader)
+                    val pluginClass: Class<*>
+
+                    try {
+                        pluginClass = classLoader.loadClass(className)
+                    } catch (e: Exception) {
+                        logger.warning("Failed to load class $className from plugin ${pluginFile.name}. Does the class throw an exception during initialization?")
+                        continue
+                    }
 
                     if (!KPlugin::class.java.isAssignableFrom(pluginClass)) {
                         continue
@@ -56,6 +60,8 @@ class PluginLoader: JavaPlugin() {
                     logger.info("Loading plugin ${pluginInfo.name} v${pluginInfo.version} by ${pluginInfo.authors.joinToString(", ")}")
 
                     try {
+                        val pluginDirectory = File(pluginFolder, pluginInfo.name).apply { mkdirs() }
+                        pluginInstance.fileLocation = pluginDirectory.toPath()
                         pluginInstance.enable()
                         plugins.add(pluginInstance)
                     } catch (e: Exception) {
@@ -67,7 +73,9 @@ class PluginLoader: JavaPlugin() {
                     e.printStackTrace()
                 }
             }
+            jarFile.close()
         }
+        commandHandler.register(KPluginsCommand(this))
         commandHandler.registerBrigadier()
     }
 

@@ -18,7 +18,8 @@ allprojects {
     repositories {
         mavenCentral()
         maven(url = "https://repo.papermc.io/repository/maven-public/")
-        maven ( url = "https://jitpack.io" )
+        maven(url = "https://jitpack.io")
+        maven(url = "https://storehouse.okaeri.eu/repository/maven-public/")
     }
 
     dependencies {
@@ -26,6 +27,10 @@ allprojects {
         implementation( "com.github.Revxrsal.Lamp:common:3.1.3")
         implementation("com.github.Revxrsal.Lamp:bukkit:3.1.3")
         implementation("com.github.Revxrsal.Lamp:brigadier:3.1.3")
+        implementation("eu.okaeri:okaeri-configs-validator-okaeri:5.0.0-beta.4")
+        implementation("eu.okaeri:okaeri-configs-serdes-bukkit:5.0.0-beta.4")
+        implementation("eu.okaeri:okaeri-configs-serdes-commons:5.0.0-beta.4")
+        implementation("eu.okaeri:okaeri-configs-yaml-bukkit:5.0.0-beta.4")
     }
 
     java {
