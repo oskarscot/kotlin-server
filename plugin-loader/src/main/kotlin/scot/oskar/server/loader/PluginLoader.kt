@@ -1,19 +1,19 @@
 package scot.oskar.server.loader
 
-import org.bukkit.Server
 import org.bukkit.plugin.java.JavaPlugin
+import revxrsal.commands.bukkit.BukkitCommandHandler
 import scot.oskar.server.api.KPlugin
 import scot.oskar.server.api.PluginInfo
 import java.io.File
 import java.net.URLClassLoader
 import java.util.jar.JarFile
-import java.util.logging.Logger
-
 class PluginLoader: JavaPlugin() {
 
-    private val plugins = mutableListOf<KPlugin>()
+    val plugins = mutableListOf<KPlugin>()
 
     override fun onEnable() {
+        val commandHandler = BukkitCommandHandler.create(this)
+
         val pluginFolder = File(server.worldContainer.absolutePath, "kotlin-plugins").apply { mkdirs() }
         val pluginFiles = pluginFolder.listFiles { file -> file.extension == "jar" } ?: return
 
@@ -34,6 +34,11 @@ class PluginLoader: JavaPlugin() {
                 }
 
                 val className = entry.name.substring(0, entry.name.length - 6).replace('/', '.')
+
+                if(className == "revxrsal.commands.bukkit.brigadier.ReflectionCommodore"){ // temporary fix for a bug in Lamp
+                    continue;
+                }
+
                 val classLoader = URLClassLoader(arrayOf(pluginFile.toURI().toURL()), javaClass.classLoader)
 
                 try {
@@ -45,8 +50,8 @@ class PluginLoader: JavaPlugin() {
 
                     val pluginInfo = pluginClass.getAnnotation(PluginInfo::class.java) ?: continue
 
-                    val pluginInstance = pluginClass.getConstructor(Server::class.java, Logger::class.java)
-                        .newInstance(server, logger) as KPlugin
+                    val pluginInstance = pluginClass.getConstructor(JavaPlugin::class.java, BukkitCommandHandler::class.java)
+                        .newInstance(this, commandHandler) as KPlugin
 
                     logger.info("Loading plugin ${pluginInfo.name} v${pluginInfo.version} by ${pluginInfo.authors.joinToString(", ")}")
 
@@ -63,6 +68,7 @@ class PluginLoader: JavaPlugin() {
                 }
             }
         }
+        commandHandler.registerBrigadier()
     }
 
     override fun onDisable() {

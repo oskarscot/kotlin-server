@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     `java-library`
 
@@ -16,14 +18,28 @@ allprojects {
     repositories {
         mavenCentral()
         maven(url = "https://repo.papermc.io/repository/maven-public/")
+        maven ( url = "https://jitpack.io" )
     }
 
     dependencies {
         compileOnly("io.papermc.paper:paper-api:1.19.2-R0.1-SNAPSHOT")
+        implementation( "com.github.Revxrsal.Lamp:common:3.1.3")
+        implementation("com.github.Revxrsal.Lamp:bukkit:3.1.3")
+        implementation("com.github.Revxrsal.Lamp:brigadier:3.1.3")
     }
 
     java {
         toolchain.languageVersion.set(JavaLanguageVersion.of(17))
+    }
+
+    tasks.named<JavaCompile>("compileJava") {
+        options.compilerArgs.add("-parameters")
+        options.isFork = true
+        options.forkOptions.executable = "javac"
+    }
+
+    tasks.named<KotlinCompile>("compileKotlin") {
+        kotlinOptions.javaParameters = true
     }
 }
 
