@@ -8,6 +8,7 @@ import eu.okaeri.configs.yaml.bukkit.YamlBukkitConfigurer
 import eu.okaeri.configs.yaml.bukkit.serdes.SerdesBukkit
 import org.bukkit.plugin.java.JavaPlugin
 import revxrsal.commands.bukkit.BukkitCommandHandler
+import scot.oskar.server.api.database.PostgresDatabase
 import java.io.File
 import java.nio.file.Path
 
@@ -15,10 +16,11 @@ abstract class KPlugin(val plugin: JavaPlugin, val commandHandler: BukkitCommand
 
     // The path to the plugin's data folder
     var fileLocation: Path? = null
+    var database: PostgresDatabase? = null
 
-    abstract fun enable();
+    abstract fun enable()
 
-    abstract fun disable();
+    abstract fun disable()
 
     /**
      * Registers a config file with the given name and default serdes packs.

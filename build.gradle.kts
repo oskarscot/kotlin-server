@@ -38,6 +38,8 @@ allprojects {
         implementation("dev.peri.yetanothermessageslibrary:core:5.0.0")
         implementation("dev.peri.yetanothermessageslibrary:repository-okaeri:5.0.0")
         implementation("dev.peri.yetanothermessageslibrary:platform-bukkit:5.0.0")
+
+        implementation("org.postgresql:postgresql:42.5.4")
     }
 
     java {

@@ -2,8 +2,8 @@ package scot.oskar.server.hello.message
 
 import dev.peri.yetanothermessageslibrary.viewer.ViewerDataSupplier
 import net.kyori.adventure.audience.Audience
-import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
+import org.bukkit.command.ConsoleCommandSender
 import org.bukkit.entity.Player
 import java.util.*
 
@@ -13,13 +13,10 @@ class SimpleViewerDataSupplier : ViewerDataSupplier<CommandSender, UUID> {
     }
 
     override fun isConsole(receiver: CommandSender): Boolean {
-        return receiver != Bukkit.getConsoleSender()
+        return receiver is ConsoleCommandSender
     }
 
     override fun getKey(receiver: CommandSender): UUID {
-        if(receiver == Bukkit.getConsoleSender()) {
-            return UUID(0, 0)
-        }
         return (receiver as Player).uniqueId
     }
 }
