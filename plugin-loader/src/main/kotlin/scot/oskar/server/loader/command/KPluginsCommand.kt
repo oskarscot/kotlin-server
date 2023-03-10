@@ -10,6 +10,8 @@ import scot.oskar.server.loader.PluginLoader
 
 class KPluginsCommand(private val pluginLoader: PluginLoader) {
 
+    //TODO: Fix this class, implement proper message handling and configuration
+
     @CommandPermission("kloader.plugins")
     @Command("loader plugins")
     fun plugins(sender: Player) {

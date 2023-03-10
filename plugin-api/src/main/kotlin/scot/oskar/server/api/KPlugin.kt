@@ -13,16 +13,30 @@ import java.nio.file.Path
 
 abstract class KPlugin(val plugin: JavaPlugin, val commandHandler: BukkitCommandHandler) {
 
+    // The path to the plugin's data folder
     var fileLocation: Path? = null
 
     abstract fun enable();
 
     abstract fun disable();
 
+    /**
+     * Registers a config file with the given name and default serdes packs.
+     *
+     * config: The config class to register
+     * fileName: The name of the file to register
+     * */
    fun <T: OkaeriConfig> registerConfigDefault(config: Class<T>, fileName: String): T {
         return registerConfig(config, fileName, SerdesBukkit(), SerdesCommons())
    }
 
+    /**
+     * Registers a config file with the given name and serdes packs.
+     *
+     * config: The config class to register
+     * fileName: The name of the file to register
+     * serdesPack: The okaeri serdes packs to use
+     * */
     fun <T : OkaeriConfig> registerConfig(config: Class<T>, fileName: String, vararg serdesPack: OkaeriSerdesPack): T {
         return ConfigManager.create(config) {
             it.withConfigurer(YamlBukkitConfigurer(), *serdesPack)

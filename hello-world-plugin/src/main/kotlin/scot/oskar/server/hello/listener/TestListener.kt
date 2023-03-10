@@ -8,7 +8,7 @@ import scot.oskar.server.hello.message.MessageService
 class TestListener(private val service: MessageService): Listener {
 
     @EventHandler
-    fun testEvent(event: PlayerJoinEvent) {
-        service.getMessage { it.dupa }.sendTo(event.player)
+    fun playerJoin(event: PlayerJoinEvent) {
+        service.getMessage { it.welcomeMessage }.sendTo(event.player)
     }
 }

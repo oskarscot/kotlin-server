@@ -57,38 +57,35 @@ class PluginLoader: JavaPlugin() {
 
                 val classLoader = URLClassLoader(arrayOf(pluginFile.toURI().toURL()), javaClass.classLoader)
 
+                val pluginClass: Class<*>
+
                 try {
-                    val pluginClass: Class<*>
-
-                    try {
-                        pluginClass = classLoader.loadClass(className)
-                    } catch (e: Exception) {
-                        logger.warning("Failed to load class $className from plugin ${pluginFile.name}. Does the class throw an exception during initialization?")
-                        continue
-                    }
-
-                    if (!KPlugin::class.java.isAssignableFrom(pluginClass)) {
-                        continue
-                    }
-
-                    val pluginInfo = pluginClass.getAnnotation(PluginInfo::class.java) ?: continue
-
-                    val pluginInstance = pluginClass.getConstructor(JavaPlugin::class.java, BukkitCommandHandler::class.java)
-                        .newInstance(this, commandHandler) as KPlugin
-
-                    logger.info("Loading plugin ${pluginInfo.name} v${pluginInfo.version} by ${pluginInfo.authors.joinToString(", ")}")
-
-                    try {
-                        val pluginDirectory = File(pluginFolder, pluginInfo.name).apply { mkdirs() }
-                        pluginInstance.fileLocation = pluginDirectory.toPath()
-                        pluginInstance.enable()
-                        plugins.add(pluginInstance)
-                    } catch (e: Exception) {
-                        logger.warning("Failed to enable plugin ${pluginInfo.name}")
-                        e.printStackTrace()
-                    }
+                    pluginClass = classLoader.loadClass(className)
                 } catch (e: Exception) {
-                    logger.warning("Failed to load class $className from plugin ${pluginFile.name}")
+                    logger.warning("Failed to load class $className from plugin ${pluginFile.name}. Does the class throw an exception during initialization?")
+                    continue
+                }
+
+                // Check if the class is a plugin, and if so, get the plugin info and create an instance
+                if (!KPlugin::class.java.isAssignableFrom(pluginClass)) {
+                    continue
+                }
+
+                val pluginInfo = pluginClass.getAnnotation(PluginInfo::class.java) ?: continue
+
+                // Create an instance of the plugin and pass the command handler to it
+                val pluginInstance = pluginClass.getConstructor(JavaPlugin::class.java, BukkitCommandHandler::class.java)
+                    .newInstance(this, commandHandler) as KPlugin
+
+                logger.info("Loading plugin ${pluginInfo.name} v${pluginInfo.version} by ${pluginInfo.authors.joinToString(", ")}")
+
+                try {
+                    val pluginDirectory = File(pluginFolder, pluginInfo.name).apply { mkdirs() }
+                    pluginInstance.fileLocation = pluginDirectory.toPath()
+                    pluginInstance.enable()
+                    plugins.add(pluginInstance)
+                } catch (e: Exception) {
+                    logger.warning("Failed to enable plugin ${pluginInfo.name}")
                     e.printStackTrace()
                 }
             }
