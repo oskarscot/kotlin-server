@@ -17,7 +17,7 @@ import kotlin.concurrent.timerTask
     name = "hello-world-plugin",
     version = "0.0.1",
     description = "A simple plugin that prints Hello World to the console",
-    authors = ["Oskar"]
+    authors = ["oskarscot"]
 )
 class HelloWorldPlugin(javaPlugin: JavaPlugin, commandHandler: BukkitCommandHandler) : KPlugin(javaPlugin, commandHandler) {
 

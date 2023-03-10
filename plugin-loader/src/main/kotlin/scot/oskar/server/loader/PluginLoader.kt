@@ -12,9 +12,28 @@ class PluginLoader: JavaPlugin() {
 
     val plugins = mutableListOf<KPlugin>()
 
-    override fun onEnable() {
-        val commandHandler = BukkitCommandHandler.create(this)
+    lateinit var commandHandler: BukkitCommandHandler
 
+    override fun onEnable() {
+        commandHandler = BukkitCommandHandler.create(this)
+
+        loadPlugins()
+
+        commandHandler.registerBrigadier()
+    }
+
+    override fun onDisable() {
+        plugins.forEach { plugin ->
+            try {
+                plugin.disable()
+            } catch (e: Exception) {
+                logger.warning("Failed to disable plugin ${plugin.javaClass.getAnnotation(PluginInfo::class.java)?.name}")
+                e.printStackTrace()
+            }
+        }
+    }
+
+    fun loadPlugins() {
         val pluginFolder = File(server.worldContainer.absolutePath, "kotlin-plugins").apply { mkdirs() }
         val pluginFiles = pluginFolder.listFiles { file -> file.extension == "jar" } ?: return
 
@@ -76,17 +95,5 @@ class PluginLoader: JavaPlugin() {
             jarFile.close()
         }
         commandHandler.register(KPluginsCommand(this))
-        commandHandler.registerBrigadier()
-    }
-
-    override fun onDisable() {
-        plugins.forEach { plugin ->
-            try {
-                plugin.disable()
-            } catch (e: Exception) {
-                logger.warning("Failed to disable plugin ${plugin.javaClass.getAnnotation(PluginInfo::class.java)?.name}")
-                e.printStackTrace()
-            }
-        }
     }
 }
