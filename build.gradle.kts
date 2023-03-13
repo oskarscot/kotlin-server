@@ -26,9 +26,9 @@ allprojects {
     dependencies {
         compileOnly("io.papermc.paper:paper-api:1.19.2-R0.1-SNAPSHOT")
 
-        implementation( "com.github.Revxrsal.Lamp:common:3.1.3")
-        implementation("com.github.Revxrsal.Lamp:bukkit:3.1.3")
-        implementation("com.github.Revxrsal.Lamp:brigadier:3.1.3")
+        implementation("com.github.Revxrsal.Lamp:common:3.1.4")
+        implementation("com.github.Revxrsal.Lamp:bukkit:3.1.4")
+        implementation("com.github.Revxrsal.Lamp:brigadier:3.1.4")
 
         implementation("eu.okaeri:okaeri-configs-validator-okaeri:5.0.0-beta.4")
         implementation("eu.okaeri:okaeri-configs-serdes-bukkit:5.0.0-beta.4")
