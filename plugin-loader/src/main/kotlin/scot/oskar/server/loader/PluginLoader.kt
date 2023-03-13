@@ -61,8 +61,8 @@ class PluginLoader: JavaPlugin() {
             return
         }
 
+        commandHandler.register(KPluginsCommand(this)) // we need to re-register this command every time we want to load all commands
         pluginFiles.forEach { loadPlugin(it) }
-        commandHandler.register(KPluginsCommand(this))
     }
 
     fun loadPlugin(pluginFile: File){
@@ -78,7 +78,7 @@ class PluginLoader: JavaPlugin() {
 
             val className = entry.name.substring(0, entry.name.length - 6).replace('/', '.')
 
-            if(className.contains("osgi")) continue
+            if(className.contains("osgi")) continue // postgresql driver loads the osgi framework, we want to ignore it
 
             val classLoader = URLClassLoader(arrayOf(pluginFile.toURI().toURL()), javaClass.classLoader)
 
@@ -103,7 +103,7 @@ class PluginLoader: JavaPlugin() {
                 .newInstance(this, commandHandler) as KPlugin
 
             logger.info("Loading plugin ${pluginInfo.name} v${pluginInfo.version} by ${pluginInfo.authors.joinToString(", ")}")
-
+            logger.info("Dependencies: ${if (pluginInfo.dependencies.isEmpty()) "None" else pluginInfo.dependencies.joinToString(", ")}")
             //TODO: Add plugin dependencies
             try {
                 val pluginDirectory = File(pluginFolder, pluginInfo.name).apply { mkdirs() }
