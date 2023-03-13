@@ -108,7 +108,7 @@ class PluginLoader: JavaPlugin() {
             try {
                 val pluginDirectory = File(pluginFolder, pluginInfo.name).apply { mkdirs() }
                 pluginInstance.fileLocation = pluginDirectory.toPath()
-                pluginInstance.database = (if(databaseConfig.databaseEnabled) database else null)
+                pluginInstance.connection = (if(databaseConfig.databaseEnabled) database.connection else null)
                 pluginInstance.enable()
                 plugins.add(pluginInstance)
             } catch (e: Exception) {

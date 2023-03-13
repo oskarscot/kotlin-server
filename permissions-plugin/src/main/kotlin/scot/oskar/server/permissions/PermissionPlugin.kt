@@ -14,7 +14,7 @@ import scot.oskar.server.api.PluginInfo
 class PermissionPlugin(plugin: JavaPlugin, commandHandler: BukkitCommandHandler) : KPlugin(plugin, commandHandler) {
 
     override fun enable() {
-        plugin.logger.info(database?.connection.toString())
+        plugin.logger.info(connection.toString())
     }
 
     override fun disable() {

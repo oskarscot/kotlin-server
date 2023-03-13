@@ -8,15 +8,15 @@ import eu.okaeri.configs.yaml.bukkit.YamlBukkitConfigurer
 import eu.okaeri.configs.yaml.bukkit.serdes.SerdesBukkit
 import org.bukkit.plugin.java.JavaPlugin
 import revxrsal.commands.bukkit.BukkitCommandHandler
-import scot.oskar.server.api.database.PostgresDatabase
 import java.io.File
 import java.nio.file.Path
+import java.sql.Connection
 
 abstract class KPlugin(val plugin: JavaPlugin, val commandHandler: BukkitCommandHandler) {
 
     // The path to the plugin's data folder
     var fileLocation: Path? = null
-    var database: PostgresDatabase? = null
+    var connection: Connection? = null
 
     abstract fun enable()
 
