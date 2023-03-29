@@ -4,7 +4,7 @@ import org.bukkit.plugin.java.JavaPlugin
 import revxrsal.commands.bukkit.BukkitCommandHandler
 import scot.oskar.server.api.KPlugin
 import scot.oskar.server.api.PluginInfo
-import scot.oskar.server.permissions.listener.PlayerJoinHandler
+import scot.oskar.server.permissions.listener.PlayerHandler
 import scot.oskar.server.permissions.service.PermissionsService
 
 @PluginInfo(
@@ -19,7 +19,7 @@ class PermissionPlugin(plugin: JavaPlugin, commandHandler: BukkitCommandHandler)
 
     override fun enable() {
         permissionsService = PermissionsService(connection!!)
-        registerListeners(PlayerJoinHandler(permissionsService))
+        registerListeners(PlayerHandler(permissionsService))
     }
 
     override fun disable() {

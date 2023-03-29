@@ -1,5 +1,6 @@
 package scot.oskar.server.permissions.service
 
+import com.google.common.cache.Cache
 import com.google.common.cache.CacheBuilder
 import scot.oskar.server.permissions.data.PermissionPlayer
 import java.sql.Connection
@@ -8,7 +9,7 @@ import java.util.concurrent.CompletableFuture
 
 class PermissionsService(private val connection: Connection) {
 
-    private val cache = CacheBuilder.newBuilder().build<UUID, PermissionPlayer>()
+    val cache: Cache<UUID, PermissionPlayer> = CacheBuilder.newBuilder().build()
 
     fun getPermissionPlayer(uuid: UUID): CompletableFuture<PermissionPlayer?> {
         val cachedPlayer = cache.getIfPresent(uuid)
@@ -51,5 +52,4 @@ class PermissionsService(private val connection: Connection) {
         statement.executeUpdate()
         cache.put(player.uuid, player)
     }
-
 }

@@ -7,7 +7,7 @@ import scot.oskar.server.api.extension.toMiniMessage
 import scot.oskar.server.permissions.data.PermissionPlayer
 import scot.oskar.server.permissions.service.PermissionsService
 import java.time.Instant
-class PlayerJoinHandler(private val permissionsService: PermissionsService): Listener {
+class PlayerHandler(private val permissionsService: PermissionsService): Listener {
 
     @EventHandler
     private fun onJoin(event: PlayerJoinEvent) {
@@ -31,5 +31,12 @@ class PlayerJoinHandler(private val permissionsService: PermissionsService): Lis
                 throwable.printStackTrace()
                 null
         }
+    }
+
+    @EventHandler
+    private fun onQuit(event: PlayerJoinEvent) {
+        val player = event.player
+        permissionsService.getPermissionPlayer(player.uniqueId).thenAccept { permissionsService.updatePermissionPlayer(it!!) } // Not null because we just got it
+        permissionsService.cache.invalidate(player.uniqueId)
     }
 }
