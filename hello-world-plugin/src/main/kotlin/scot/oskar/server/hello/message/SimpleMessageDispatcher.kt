@@ -12,5 +12,4 @@ class SimpleMessageDispatcher(
     viewerService: ViewerService<CommandSender, out Viewer>,
     localeSupplier: Function<Any?, Locale>,
     messageSupplier: Function<Any?, Sendable?>
-) : BukkitMessageDispatcher<SimpleMessageDispatcher>(viewerService, localeSupplier, messageSupplier) {
-}
+) : BukkitMessageDispatcher<SimpleMessageDispatcher>(viewerService, localeSupplier, messageSupplier)
