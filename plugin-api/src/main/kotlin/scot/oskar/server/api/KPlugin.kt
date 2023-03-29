@@ -6,6 +6,7 @@ import eu.okaeri.configs.serdes.OkaeriSerdesPack
 import eu.okaeri.configs.serdes.commons.SerdesCommons
 import eu.okaeri.configs.yaml.bukkit.YamlBukkitConfigurer
 import eu.okaeri.configs.yaml.bukkit.serdes.SerdesBukkit
+import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
 import revxrsal.commands.bukkit.BukkitCommandHandler
 import java.io.File
@@ -14,7 +15,6 @@ import java.sql.Connection
 
 abstract class KPlugin(val plugin: JavaPlugin, val commandHandler: BukkitCommandHandler) {
 
-    // The path to the plugin's data folder
     var fileLocation: Path? = null
     var connection: Connection? = null
 
@@ -46,6 +46,10 @@ abstract class KPlugin(val plugin: JavaPlugin, val commandHandler: BukkitCommand
                 .saveDefaults()
                 .load(true)
         }
+    }
+
+    fun registerListeners(vararg listener: Listener){
+        listener.forEach { plugin.server.pluginManager.registerEvents(it, plugin) }
     }
 
 }
